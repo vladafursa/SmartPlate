@@ -22,9 +22,10 @@ namespace SmartPlate.Controllers
         {
             var user = await _userService.RegisterAsync(dto);
 
+            // If the username or email already exists, return 400 Bad Request
             if (user == null)
                 return BadRequest("Username or Email already exists.");
-
+            // Otherwise, return 200 OK with the created user data
             return Ok(user);
         }
 
@@ -34,25 +35,27 @@ namespace SmartPlate.Controllers
         {
             var (user, token) = await _userService.LoginAsync(dto);
 
+            // If login fails  - 401 Unauthorized
             if (user == null || token == null)
                 return Unauthorized("Invalid credentials.");
 
             Response.Cookies.Append("jwt", token, new CookieOptions
             {
                 HttpOnly = true,
-                Secure = true,
-                SameSite = SameSiteMode.Strict,
-                Expires = DateTime.UtcNow.AddHours(2)
+                Secure = true, // ensures cookie is sent over HTTPS only
+                SameSite = SameSiteMode.Strict, // prevents sending cookie on cross-site requests
+                Expires = DateTime.UtcNow.AddHours(2) //  cookie expires in 2 hours
             });
-
+            // Return 200 OK with the user data
             return Ok(user);
         }
 
         //logout
-        [Authorize]
+        [Authorize]// User must be authenticated
         [HttpPost("logout")]
         public IActionResult Logout()
         {
+            // Delete the JWT cookie to log the user out
             Response.Cookies.Delete("jwt", new CookieOptions
             {
                 HttpOnly = true,
@@ -63,15 +66,5 @@ namespace SmartPlate.Controllers
             return Ok(new { message = "Logged out successfully." });
         }
 
-        //test
-        [Authorize]
-        [HttpGet("me")]
-        public IActionResult Me()
-        {
-            return Ok(new
-            {
-                User = User.Identity?.Name
-            });
-        }
     }
 }
