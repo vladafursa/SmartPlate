@@ -4,7 +4,8 @@ using SmartPlate.DTOs.User;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using SmartPlate.Data;
-using SmartPlate.Helpers; // <-- needed
+using SmartPlate.Helpers;
+using Moq;
 
 namespace SmartPlate.Tests.UserTests
 {
@@ -32,7 +33,7 @@ namespace SmartPlate.Tests.UserTests
             _service = new UserService(_context, jwtOptions);
         }
 
-        [Fact] // <-- async Task, not async void
+        [Fact]
         public async Task Register_ShouldCreateUser()
         {
             var dto = new UserRegisterDto
