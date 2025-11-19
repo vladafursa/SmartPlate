@@ -1,10 +1,10 @@
-namespace SmartPlate.Models.Enums;
+namespace SmartPlate.Models;
 
 public enum PlateType
 {
-    CurrentStyle,
     Dateless,
     Irish,
+    Modern,
     Prefix,
     Suffix
 }
