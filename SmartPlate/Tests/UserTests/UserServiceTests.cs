@@ -5,7 +5,7 @@ using SmartPlate.Data;
 using SmartPlate.DTOs.User;
 using SmartPlate.Helpers;
 using SmartPlate.Services.UserService;
-
+using System.Threading.Tasks;
 
 namespace SmartPlate.Tests.UserTests
 {
@@ -22,7 +22,7 @@ namespace SmartPlate.Tests.UserTests
 
             var jwtOptions = Options.Create(new JwtSettings
             {
-                Key = "TestSecretKey1234567890",
+                Key = "ThisIsASuperLongTestSecretKey12345678901234567890",
                 Issuer = "TestIssuer",
                 Audience = "TestAudience",
                 ExpireMinutes = 60
@@ -93,6 +93,108 @@ namespace SmartPlate.Tests.UserTests
             //Assert
             Assert.NotNull(userInDb);
             Assert.NotEqual(dto.Password, userInDb!.PasswordHash);
+        }
+
+        //login tests
+        [Fact]
+        public async Task Login_ShouldReturnUserAndToken_WhenCredentialsAreValid()
+        {
+            // Arrange
+            var registerDto = new UserRegisterDto
+            {
+                Name = "loginuser",
+                Password = "password123",
+                Email = "login@example.com",
+                Role = "User"
+            };
+
+
+            var loginDto = new UserLoginDto
+            {
+                Email = "login@example.com",
+                Password = "password123"
+            };
+
+            // Act
+            await _service.RegisterAsync(registerDto);
+            var (user, token) = await _service.LoginAsync(loginDto);
+
+            // Assert
+            Assert.NotNull(user);
+            Assert.Equal("loginuser", user!.UserName);
+            Assert.False(string.IsNullOrEmpty(token));
+        }
+
+        [Fact]
+        public async Task Login_ShouldReturnNull_WhenEmailDoesNotExist()
+        {
+            //Arrange
+            var loginDto = new UserLoginDto
+            {
+                Email = "doesnotexist@example.com",
+                Password = "password123"
+            };
+
+            //Act
+            var (user, token) = await _service.LoginAsync(loginDto);
+
+            //Assert
+            Assert.Null(user);
+            Assert.Null(token);
+        }
+
+        [Fact]
+        public async Task Login_ShouldReturnNull_WhenPasswordIsInvalid()
+        {
+            // Arrange
+            var registerDto = new UserRegisterDto
+            {
+                Name = "wrongpassuser",
+                Password = "correctpassword",
+                Email = "wrongpass@example.com",
+                Role = "User"
+            };
+
+            var loginDto = new UserLoginDto
+            {
+                Email = "wrongpass@example.com",
+                Password = "incorrectpassword"
+            };
+
+            // Act
+            await _service.RegisterAsync(registerDto);
+            var (user, token) = await _service.LoginAsync(loginDto);
+
+            // Assert
+            Assert.Null(user);
+            Assert.Null(token);
+        }
+
+        [Fact]
+        public async Task Login_ShouldGenerateToken_WhenCredentialsAreValid()
+        {
+            //Arrange
+            var registerDto = new UserRegisterDto
+            {
+                Name = "tokenuser",
+                Password = "password123",
+                Email = "token@example.com",
+                Role = "User"
+            };
+
+            var loginDto = new UserLoginDto
+            {
+                Email = "token@example.com",
+                Password = "password123"
+            };
+
+            //Act
+            await _service.RegisterAsync(registerDto);
+            var (_, token) = await _service.LoginAsync(loginDto);
+
+            //Assert
+            Assert.NotNull(token);
+            Assert.StartsWith("ey", token);
         }
     }
 }
