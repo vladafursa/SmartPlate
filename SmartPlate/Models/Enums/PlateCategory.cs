@@ -1,4 +1,4 @@
-namespace SmartPlate.Models;
+namespace SmartPlate.Models.Enums;
 
 public enum PlateCategory
 {
