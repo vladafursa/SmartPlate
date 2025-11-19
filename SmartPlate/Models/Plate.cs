@@ -32,5 +32,6 @@ public class Plate
 
     // Tracking / value history
     public DateTime DateListed { get; set; }
+    public List<PlateOwnershipRecord> OwnershipHistory { get; set; } = new();
     public List<PlateBid> BidHistory { get; set; }
 }
