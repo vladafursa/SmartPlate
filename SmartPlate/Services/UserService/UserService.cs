@@ -15,11 +15,11 @@ namespace SmartPlate.Services.UserService
 {
     public class UserService : IUserService
     {
-        private readonly UserDbContext _context;
+        private readonly AppDbContext _context;
         private readonly JwtSettings _jwt;
 
         // Constructor with dependency injection
-        public UserService(UserDbContext context, IOptions<JwtSettings> jwtOptions)
+        public UserService(AppDbContext context, IOptions<JwtSettings> jwtOptions)
         {
             _context = context;
             _jwt = jwtOptions.Value; // Get JwtSettings values from IOptions

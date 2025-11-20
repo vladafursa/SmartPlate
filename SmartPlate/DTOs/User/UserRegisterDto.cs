@@ -5,9 +5,9 @@ namespace SmartPlate.DTOs.User
 {
     public record class UserRegisterDto
     {
-        [Required][StringLength(50)] public string Name { get; init; }
-        [Required][StringLength(20)] public string Password { get; init; }
-        [Required][StringLength(20)][EmailAddress] public string Email { get; init; }
+        [Required][StringLength(50)] public required string Name { get; init; }
+        [Required][StringLength(20)] public required string Password { get; init; }
+        [Required][StringLength(20)][EmailAddress] public required string Email { get; init; }
         [StringLength(20)] public string Role { get; init; } = "User";
     }
 }

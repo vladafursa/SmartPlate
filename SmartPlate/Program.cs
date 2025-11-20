@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
+using System.Text.Json.Serialization;
 using SmartPlate.Data;
 using SmartPlate.Helpers;
 using SmartPlate.Services.UserService;
@@ -19,13 +20,16 @@ builder.Services.Configure<JwtSettings>(builder.Configuration.GetSection("Jwt"))
 var jwtSettings = builder.Configuration.GetSection("Jwt").Get<JwtSettings>();
 
 //db context
-builder.Services.AddSqlite<UserDbContext>(builder.Configuration.GetConnectionString("UserDb"));
+builder.Services.AddSqlite<AppDbContext>(builder.Configuration.GetConnectionString("AppDb"));
 
 //services
 builder.Services.AddScoped<IUserService, UserService>();
 
 //controllers
-builder.Services.AddControllers();
+builder.Services.AddControllers().AddJsonOptions(options =>
+    {
+        options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
+    });
 
 var key = Encoding.UTF8.GetBytes(jwtSettings.Key);
 

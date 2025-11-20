@@ -12,11 +12,11 @@ namespace SmartPlate.Tests.UserTests
     public class UserServiceTests
     {
         private readonly UserService _service;
-        private readonly UserDbContext _context;
+        private readonly AppDbContext _context;
 
         public UserServiceTests()
         {
-            var options = new DbContextOptionsBuilder<UserDbContext>()
+            var options = new DbContextOptionsBuilder<AppDbContext>()
                 .UseInMemoryDatabase("TestDb")
                 .Options;
 
@@ -28,7 +28,7 @@ namespace SmartPlate.Tests.UserTests
                 ExpireMinutes = 60
             });
 
-            _context = new UserDbContext(options);
+            _context = new AppDbContext(options);
             _service = new UserService(_context, jwtOptions);
         }
 

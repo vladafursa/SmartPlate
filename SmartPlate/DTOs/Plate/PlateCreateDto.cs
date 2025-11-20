@@ -1,3 +1,4 @@
+/*
 using System.ComponentModel.DataAnnotations;
 using SmartPlate.Models.Enums;
 namespace SmartPlate.DTOs.Plate;
@@ -33,6 +34,8 @@ public class PlateCreateDto
     public bool IsAuction { get; set; }
     [Required]
     public PlateSupplyType Supply { get; set; }
-    //status
+
+    // Status
     public PlateStatus Status { get; set; } = PlateStatus.Listed;
 }
+*/

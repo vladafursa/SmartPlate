@@ -1,37 +1,92 @@
+using System;
+using System.Collections.Generic;
 using SmartPlate.Models.Enums;
-namespace SmartPlate.Models;
 
-public class Plate
+namespace SmartPlate.Models
 {
-    public Guid Id { get; set; }
+    public class Plate
+    {
+        // Parameterless constructor for EF Core
+        private Plate()
+        {
+            Categories = new List<PlateCategory>();
+            OwnershipHistory = new List<PlateOwnershipRecord>();
+        }
 
-    // Core identity
-    public string RegistrationNumber { get; set; }
-    public PlateType Type { get; set; }
-    public List<PlateCategory> Categories { get; set; } = new();
+        // Private constructor to initialise Plate with required properties
+        private Plate(string registrationNumber, PlateType type, string region, int? yearIssued,
+                      bool canApplyToAnyVehicle, bool isAssigned, bool availableAsCertificate,
+                      PlateSupplyType supply, IEnumerable<PlateCategory> categories)
+        {
+            Id = Guid.NewGuid();
+            RegistrationNumber = registrationNumber;
+            Type = type;
+            Region = region;
+            YearIssued = yearIssued;
+            CanApplyToAnyVehicle = canApplyToAnyVehicle;
+            IsAssigned = isAssigned;
+            AvailableAsCertificate = availableAsCertificate;
+            Supply = supply;
 
-    // Classification
-    public string Region { get; set; }
-    public int? YearIssued { get; set; }
+            // Categories are fixed and assigned at creation
+            Categories = new List<PlateCategory>(categories);
 
-    // Assignment / DVLA rules
-    public bool CanApplyToAnyVehicle { get; set; }
-    public bool IsAssigned { get; set; }
-    public bool AvailableAsCertificate { get; set; }
+            // Initialise ownership history
+            OwnershipHistory = new List<PlateOwnershipRecord>();
+        }
 
-    // Marketplace metadata
-    public decimal Price { get; set; }
-    public decimal TransferFee { get; set; } = 80m;
-    public bool IsAuction { get; set; }
+        public Guid Id { get; private set; }
 
-    public PlateSupplyType Supply { get; set; }
+        // Core identity
+        public string RegistrationNumber { get; private set; } = null!;
+        public PlateType Type { get; private set; }
+        // Fixed categories assigned at creation
+        public IReadOnlyCollection<PlateCategory> Categories { get; private set; }
 
-    // Ownership/trade state
-    public Guid? CurrentOwnerId { get; set; }
-    public PlateStatus Status { get; set; } = PlateStatus.Listed;
+        // Classification
+        public string Region { get; private set; } = null!;
+        public int? YearIssued { get; private set; }
 
-    // Tracking / value history
-    public DateTime DateListed { get; set; }
-    public List<PlateOwnershipRecord> OwnershipHistory { get; set; } = new();
-    public List<PlateBid> BidHistory { get; set; }
+        // Assignment / DVLA rules
+        public bool CanApplyToAnyVehicle { get; private set; }
+        public bool IsAssigned { get; private set; }
+        public bool AvailableAsCertificate { get; private set; }
+
+        public PlateSupplyType Supply { get; private set; }
+
+        // Ownership history of the plate
+        public ICollection<PlateOwnershipRecord> OwnershipHistory { get; private set; }
+        public void AddOwnershipRecord(PlateOwnershipRecord record)
+        {
+            OwnershipHistory.Add(record);
+        }
+
+        // Factory method to create a new Plate instance
+        public static Plate Create(
+            string registrationNumber,
+            PlateType type,
+            string region,
+            int? yearIssued,
+            bool canApplyToAnyVehicle,
+            bool isAssigned,
+            bool availableAsCertificate,
+            PlateSupplyType supply,
+            IEnumerable<PlateCategory> categories)
+        {
+            if (categories == null)
+                throw new ArgumentNullException(nameof(categories), "Plate must have at least one category.");
+
+            return new Plate(
+                registrationNumber,
+                type,
+                region,
+                yearIssued,
+                canApplyToAnyVehicle,
+                isAssigned,
+                availableAsCertificate,
+                supply,
+                categories
+            );
+        }
+    }
 }
