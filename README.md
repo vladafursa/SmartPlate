@@ -46,31 +46,6 @@ This version is intentionally built as a **modular monolith** to allow fast deve
 
 ---
 
-##  Architecture Overview
-
-SmartPlate follows a **modular folder-by-feature structure** inside one monolithic Web API project.
-
-```text
-SmartPlate/
- ├── Controllers/
- │    ├── UserController.cs
- │    ├── PlateController.cs
- │    ├── OrderController.cs
- ├── Services/
- │    ├── UserService/
- │    ├── PlateService/
- │    ├── OrderService/
- ├── Data/
- │    ├── UserDbContext.cs
- │    ├── PlateDbContext.cs
- │    ├── OrderDbContext.cs
- ├── Models/
- │    ├── User.cs
- │    ├── Plate.cs
- │    ├── Order.cs
- ├── DTOs/
- └── Tests/
-```
 
 ## Installation & Running
 
@@ -78,5 +53,6 @@ SmartPlate/
 ```bash
 git clone https://github.com/vladafursa/SmartPlate.git
 cd SmartPlate
+
 
 
