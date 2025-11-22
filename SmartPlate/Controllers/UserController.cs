@@ -47,7 +47,7 @@ namespace SmartPlate.Controllers
                 Expires = DateTime.UtcNow.AddHours(2) //  cookie expires in 2 hours
             });
             // Return 200 OK with the user data
-            return Ok(user);
+            return Ok(new { user, token });
         }
 
         //logout
