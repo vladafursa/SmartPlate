@@ -3,22 +3,24 @@ using SmartPlate.Data;
 using SmartPlate.DTOs.Plate;
 using SmartPlate.Models;
 using SmartPlate.Mappers;
-
+using SmartPlate.Services.PlateOwnershipService;
 
 namespace SmartPlate.Services.PlateService
 {
     public class PlateService : IPlateService
     {
         private readonly AppDbContext _context;
+        private readonly IPlateOwnershipService _ownershipService;
 
         // Constructor with dependency injection
-        public PlateService(AppDbContext context)
+        public PlateService(AppDbContext context, IPlateOwnershipService ownershipService)
         {
             _context = context;
+            _ownershipService = ownershipService;
         }
 
 
-        public async Task<PlateResponseDto?> CreateAsync(PlateCreateDto dto)
+        public async Task<PlateResponseDto?> CreateAsync(PlateCreateDto dto, Guid currentUserId)
         {
             var exists = await _context.Plates
                 .AnyAsync(p => p.RegistrationNumber.ToLower() == dto.RegistrationNumber.ToLower());
@@ -39,6 +41,8 @@ namespace SmartPlate.Services.PlateService
 
             _context.Plates.Add(plate);
             await _context.SaveChangesAsync();
+
+            await _ownershipService.CreateAsync(currentUserId, plate.Id);
 
             return plate.ToDto();
         }

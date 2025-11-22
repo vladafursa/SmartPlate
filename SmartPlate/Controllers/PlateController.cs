@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using SmartPlate.DTOs.Plate;
 using SmartPlate.Services.PlateService;
+using System.Security.Claims;
 
 namespace SmartPlate.Controllers
 {
@@ -29,10 +30,15 @@ namespace SmartPlate.Controllers
             if (plate == null) return NotFound();
             return Ok(plate);
         }
+
         [HttpPost]
         public async Task<ActionResult<PlateResponseDto>> Create(PlateCreateDto dto)
         {
-            var plate = await _plateService.CreateAsync(dto);
+            var userIdClaim = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            if (userIdClaim == null) return Unauthorized("User ID not found in token.");
+
+            var currentUserId = Guid.Parse(userIdClaim);
+            var plate = await _plateService.CreateAsync(dto, currentUserId);
             if (plate == null) return Conflict("Plate with this registration number already exists.");
             return CreatedAtAction(nameof(GetById), new { id = plate.Id }, plate);
         }
