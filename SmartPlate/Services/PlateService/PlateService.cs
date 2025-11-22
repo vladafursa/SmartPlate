@@ -66,6 +66,43 @@ namespace SmartPlate.Services.PlateService
             return true;
         }
 
+
+        public async Task<PlateResponseDto?> UpdateAsync(PlateUpdateDto dto)
+        {
+            var plate = await _context.Plates.FirstOrDefaultAsync(p => p.Id == dto.Id);
+            if (plate == null) return null;
+
+            if (!string.IsNullOrWhiteSpace(dto.RegistrationNumber))
+                plate.UpdateRegistrationNumber(dto.RegistrationNumber);
+
+            if (dto.Type.HasValue)
+                plate.UpdateType(dto.Type.Value);
+
+            if (dto.Categories != null && dto.Categories.Any())
+                plate.UpdateCategories(dto.Categories);
+
+            if (!string.IsNullOrWhiteSpace(dto.Region))
+                plate.UpdateRegion(dto.Region);
+
+            if (dto.YearIssued.HasValue)
+                plate.UpdateYearIssued(dto.YearIssued);
+
+            if (dto.CanApplyToAnyVehicle.HasValue)
+                plate.UpdateCanApplyToAnyVehicle(dto.CanApplyToAnyVehicle.Value);
+
+            if (dto.IsAssigned.HasValue)
+                plate.UpdateIsAssigned(dto.IsAssigned.Value);
+
+            if (dto.AvailableAsCertificate.HasValue)
+                plate.UpdateAvailableAsCertificate(dto.AvailableAsCertificate.Value);
+
+            if (dto.Supply.HasValue)
+                plate.UpdateSupply(dto.Supply.Value);
+
+            await _context.SaveChangesAsync();
+            return plate.ToDto();
+        }
+
     }
 
 }

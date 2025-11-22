@@ -12,6 +12,7 @@ namespace SmartPlate.Services.PlateService
         Task<PlateResponseDto?> CreateAsync(PlateCreateDto dto);
         Task<PlateResponseDto?> GetByIdAsync(Guid id);
         Task<List<PlateResponseDto>> GetAllAsync();
+        Task<PlateResponseDto?> UpdateAsync(PlateUpdateDto dto);
         Task<bool> DeleteAsync(Guid id);
     }
 }
