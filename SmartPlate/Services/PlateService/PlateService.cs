@@ -65,6 +65,7 @@ namespace SmartPlate.Services.PlateService
             if (plate == null) return false;
 
             _context.Plates.Remove(plate);
+            await _ownershipService.DeleteOwnershipRecordsAsync(id);
             await _context.SaveChangesAsync();
 
             return true;
