@@ -37,6 +37,14 @@ namespace SmartPlate.Controllers
             return CreatedAtAction(nameof(GetById), new { id = plate.Id }, plate);
         }
 
+        [HttpPut]
+        public async Task<ActionResult<PlateResponseDto>> Update([FromBody] PlateUpdateDto dto)
+        {
+            var updatedPlate = await _plateService.UpdateAsync(dto);
+            if (updatedPlate == null) return NotFound();
+            return Ok(updatedPlate);
+        }
+
         [HttpDelete("{id:guid}")]
         public async Task<ActionResult> Delete(Guid id)
         {
