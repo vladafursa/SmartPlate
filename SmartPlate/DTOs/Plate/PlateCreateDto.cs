@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 using SmartPlate.Models.Enums;
 namespace SmartPlate.DTOs.Plate;
 
-public class PlateCreateDto
+public record class PlateCreateDto
 {
     // Core identity
     [Required]
