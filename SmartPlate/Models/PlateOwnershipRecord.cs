@@ -40,10 +40,9 @@ namespace SmartPlate.Models
         }
 
         // Mark the end of ownership
-        public void EndOwnership(DateTime end)
+        public void EndOwnership()
         {
-            if (end < Start) throw new ArgumentException("End date cannot be before start date");
-            End = end;
+            End = DateTime.UtcNow;
         }
 
         // Check if the ownership is currently active
