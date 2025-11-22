@@ -7,6 +7,7 @@ using System.Text.Json.Serialization;
 using SmartPlate.Data;
 using SmartPlate.Helpers;
 using SmartPlate.Services.UserService;
+using SmartPlate.Services.PlateService;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -24,6 +25,8 @@ builder.Services.AddSqlite<AppDbContext>(builder.Configuration.GetConnectionStri
 
 //services
 builder.Services.AddScoped<IUserService, UserService>();
+builder.Services.AddScoped<IPlateService, PlateService>();
+
 
 //controllers
 builder.Services.AddControllers().AddJsonOptions(options =>
