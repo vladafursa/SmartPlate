@@ -3,7 +3,7 @@ using SmartPlate.Models.Enums;
 
 namespace SmartPlate.DTOs.Plate
 {
-    public class PlateUpdateDto
+    public record class PlateUpdateDto
     {
         [Required]
         public required Guid Id { get; set; }

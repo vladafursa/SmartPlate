@@ -2,7 +2,7 @@ using System;
 
 namespace SmartPlate.DTOs.PlateOwnership
 {
-    public class PlateOwnershipResponseDto
+    public record class PlateOwnershipResponseDto
     {
         public Guid Id { get; set; }
         public Guid PlateId { get; set; }
