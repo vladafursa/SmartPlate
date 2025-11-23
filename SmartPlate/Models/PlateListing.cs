@@ -51,6 +51,20 @@ namespace SmartPlate.Models
             return new PlateListing(plate, seller, price, isAuction, transferFee);
         }
 
+        //updates
+        public void UpdatePrice(decimal newPrice)
+        {
+            Price = newPrice;
+        }
+        public void UpdateTransferFee(decimal newTransferFee)
+        {
+            TransferFee = newTransferFee;
+        }
+        public void UpdateIsAuction(bool newIsAuction)
+        {
+            IsAuction = newIsAuction;
+        }
+
         //changes in status
         public void MarkAsCompleted() => Status = PlateListingStatus.Sold;
         public void MarkAsPending() => Status = PlateListingStatus.PendingSale;
